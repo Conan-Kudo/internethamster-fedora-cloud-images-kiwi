@@ -5,6 +5,9 @@
 		<profile name="Container-Base-Generic" description="Generic Base Container Image">
 			<requires profile="ContainerCore"/>
 		</profile>
+		<profile name="Container-Web-HelloWorld" description="Hello World website Container Image">
+			<requires profile="ContainerCore"/>
+		</profile>
 	</profiles>
 	<preferences profiles="Container-Base-Generic">
 		<type image="oci">
@@ -19,6 +22,31 @@
 					<label name="org.opencontainers.image.url" value="https://github.com/Internethamster/"/>
 					<label name="org.opencontainers.image.license" value="MIT"/>
 					<label name="org.opencontainers.image.name" value="fedora-cloud-base"/>
+					<label name="org.opencontainers.image.version" value="rawhide"/>
+				</labels>
+				<environment>
+					<env name="container" value="oci"/>
+				</environment>
+			</containerconfig>
+		</type>
+		<timezone>Etc/UTC</timezone>
+		<locale>en_US</locale>
+		<rpm-locale-filtering>true</rpm-locale-filtering>
+		<rpm-excludedocs>true</rpm-excludedocs>
+	</preferences>
+	<preferences profiles="Container-Web-HelloWorld">
+		<type image="oci">
+			<containerconfig
+			  name="fedora-ih-web-helloworld"
+			  tag="rawhide"
+			  maintainer="Neal Gompa &lt;neal@gompa.dev&gt;"
+			>
+				<subcommand execute="/usr/bin/caddy run --environ --config /etc/caddy/Caddyfile"/>
+				<labels>
+					<label name="org.opencontainers.image.vendor" value="Internet Hamsters"/>
+					<label name="org.opencontainers.image.url" value="https://github.com/Internethamster/"/>
+					<label name="org.opencontainers.image.license" value="MIT"/>
+					<label name="org.opencontainers.image.name" value="fedora-ih-web-helloworld"/>
 					<label name="org.opencontainers.image.version" value="rawhide"/>
 				</labels>
 				<environment>
@@ -71,5 +99,13 @@
 		<package name="tzdata"/>
 		<package name="xz"/>
 		<package name="zstd"/>
+	</packages>
+	<packages type="bootstrap" profiles="Container-Web-HelloWorld">
+		<ignore name="glibc-langpack-en"/>
+		<ignore name="langpacks-en"/>
+		<ignore name="tzdata"/>
+		<package name="dnf5"/>
+		<package name="caddy"/>
+		<package name="glibc-minimal-langpack"/>
 	</packages>
 </image>
